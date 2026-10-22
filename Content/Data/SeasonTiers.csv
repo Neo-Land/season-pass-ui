@@ -1,0 +1,21 @@
+---,TierIndex,XPRequired,FreeRewardName,PremiumRewardName,Rarity,UnlocksSkillNode
+Tier01,1,0,Spray: Sunrise,Outfit: Nova,Rare,
+Tier02,2,450,Banner: Grid,Emote: Wave,Common,
+Tier03,3,910,XP Boost,Wrap: Neon Drift,Common,
+Tier04,4,1380,Emote: Chef's Kiss,Back Bling: Spice Rack,Rare,Cooking II
+Tier05,5,1860,Spray: Lightning,Pickaxe: Prism,Rare,
+Tier06,6,2350,Loading Screen: Dusk,Glider: Comet,Common,
+Tier07,7,2850,Banner: Waves,Contrail: Stardust,Common,
+Tier08,8,3360,Music Pack: Riff,Outfit: Encore,Epic,Guitar II
+Tier09,9,3880,XP Boost,Wrap: Chrome,Rare,
+Tier10,10,4410,Emote: Victory Lap,Outfit: Nova (Gold),Legendary,
+Tier11,11,4950,Spray: Cactus,Emote: Moonwalk,Common,
+Tier12,12,5500,Banner: Finish Line,Back Bling: Pace Pack,Rare,Running II
+Tier13,13,6060,Loading Screen: Peak,Pickaxe: Split Tone,Common,
+Tier14,14,6630,XP Boost,Glider: Paper Plane,Rare,
+Tier15,15,7210,Emote: Doodle Dance,Wrap: Ink Splash,Epic,
+Tier16,16,7800,Spray: Sketchbook,Outfit: Muralist,Epic,Drawing II
+Tier17,17,8400,Banner: Aurora,Contrail: Pixel Trail,Rare,
+Tier18,18,9010,XP Boost,Emote: Keyboard Solo,Common,
+Tier19,19,9630,Loading Screen: Finale,Pickaxe: Obsidian,Epic,
+Tier20,20,10260,Emote: Ship It,Outfit: Architect,Legendary,Coding II
