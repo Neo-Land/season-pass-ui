@@ -2,7 +2,7 @@
 
 ![Season pass demo](Docs/demo.gif)
 
-▶ **[Watch the full demo (48 s)](VIDEO_LINK)**
+▶ **[Watch the full demo (48 s)](https://youtu.be/X8nqCj49jE0)**
 
 A Fortnite-style season progression screen built in **Unreal Engine 5.8**. It has 20 reward tiers with free and premium tracks, an XP bar that fills smoothly, claimable rewards, an animated level-up toast, a tier list that scrolls to follow your level, skill nodes that unlock as you claim tiers, and progress that is saved between sessions.
 
