@@ -86,6 +86,7 @@ void USeasonPassWidget::SetViewModel(USeasonPassViewModel* InViewModel)
 	}
 
 	DisplayedXP = ViewModel->GetXPProgress();
+	ScrolledForLevel = INDEX_NONE;
 
 	ShowLevelUpHandle = ViewModel->AddFieldValueChangedDelegate(
 		USeasonPassViewModel::FFieldNotificationClassDescriptor::bShowLevelUp,
@@ -96,7 +97,40 @@ void USeasonPassWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTim
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
 
-	if (!XPBar || !ViewModel)
+	if (ViewModel)
+	{
+		TickXPBar(InDeltaTime);
+		TickAutoScroll(InDeltaTime);
+	}
+}
+
+void USeasonPassWidget::TickAutoScroll(float DeltaTime)
+{
+	if (!TierList)
+	{
+		return;
+	}
+
+	// Only glide when the level changes, so manual scrolling isn't fought every frame.
+	const int32 Level = ViewModel->GetCurrentLevel();
+	if (Level != ScrolledForLevel)
+	{
+		ScrolledForLevel = Level;
+		ScrollTarget = FMath::Max(0.f, float(Level - 1 - AutoScrollLeadTiles));
+		bAutoScrolling = true;
+	}
+
+	if (bAutoScrolling)
+	{
+		const float Offset = FMath::FInterpTo(TierList->GetScrollOffset(), ScrollTarget, DeltaTime, AutoScrollInterpSpeed);
+		TierList->SetScrollOffset(Offset);
+		bAutoScrolling = !FMath::IsNearlyEqual(Offset, ScrollTarget, 0.01f);
+	}
+}
+
+void USeasonPassWidget::TickXPBar(float DeltaTime)
+{
+	if (!XPBar)
 	{
 		return;
 	}
@@ -107,7 +141,7 @@ void USeasonPassWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTim
 		// Wrapped to a new level (or reset): refill from empty instead of draining backwards.
 		DisplayedXP = 0.f;
 	}
-	DisplayedXP = FMath::FInterpTo(DisplayedXP, Target, InDeltaTime, XPBarInterpSpeed);
+	DisplayedXP = FMath::FInterpTo(DisplayedXP, Target, DeltaTime, XPBarInterpSpeed);
 	XPBar->SetPercent(DisplayedXP);
 }
 

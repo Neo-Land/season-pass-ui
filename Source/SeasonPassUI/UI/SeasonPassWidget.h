@@ -85,9 +85,23 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Season Pass")
 	float XPBarInterpSpeed = 6.f;
 
+	/** When the level changes, the tier list glides so the current tier sits this many tiles from the left edge. */
+	UPROPERTY(EditAnywhere, Category = "Season Pass")
+	int32 AutoScrollLeadTiles = 1;
+
+	UPROPERTY(EditAnywhere, Category = "Season Pass")
+	float AutoScrollInterpSpeed = 8.f;
+
 private:
 	void HandleShowLevelUpChanged(UObject* Source, UE::FieldNotification::FFieldId FieldId);
 	void HandleToastFinished();
+	void TickXPBar(float DeltaTime);
+	void TickAutoScroll(float DeltaTime);
+
+	/** Level the list last scrolled for. INDEX_NONE forces a scroll on the first tick. */
+	int32 ScrolledForLevel = INDEX_NONE;
+	float ScrollTarget = 0.f;
+	bool bAutoScrolling = false;
 
 	UPROPERTY(Transient)
 	TObjectPtr<USeasonPassViewModel> ViewModel;
