@@ -1,10 +1,13 @@
 #include "Model/SeasonProgressSubsystem.h"
 
 #include "Engine/DataTable.h"
+#include "Kismet/GameplayStatics.h"
+#include "Model/SeasonSaveGame.h"
 
 DEFINE_LOG_CATEGORY(LogSeasonPass);
 
 const TCHAR* USeasonProgressSubsystem::TierTablePath = TEXT("/Game/Data/DT_SeasonTiers.DT_SeasonTiers");
+const TCHAR* USeasonProgressSubsystem::SaveSlotName = TEXT("SeasonProgress");
 
 void USeasonProgressSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
@@ -29,6 +32,13 @@ void USeasonProgressSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	SetTierRows(MoveTemp(Rows));
 
 	UE_LOG(LogSeasonPass, Log, TEXT("Loaded %d season tiers."), Tiers.Num());
+
+	if (const USeasonSaveGame* Save = Cast<USeasonSaveGame>(UGameplayStatics::LoadGameFromSlot(SaveSlotName, 0)))
+	{
+		ReadFrom(*Save);
+		UE_LOG(LogSeasonPass, Log, TEXT("Loaded saved progress: %d XP, level %d."), TotalXP, GetCurrentLevel());
+	}
+	bPersistenceEnabled = true;
 }
 
 void USeasonProgressSubsystem::SetTierRows(TArray<FSeasonTierRow> Rows)
@@ -53,6 +63,7 @@ void USeasonProgressSubsystem::AddXP(int32 Amount)
 	const int32 OldLevel = GetCurrentLevel();
 	TotalXP += Amount;
 	const int32 NewLevel = GetCurrentLevel();
+	SaveProgress();
 
 	OnProgressChanged.Broadcast();
 	if (NewLevel > OldLevel)
@@ -123,6 +134,7 @@ bool USeasonProgressSubsystem::ClaimTier(int32 Tier, bool bPremium)
 		UnlockedSkills.Add(Row->UnlocksSkillNode);
 	}
 
+	SaveProgress();
 	OnTierClaimed.Broadcast(Tier, bPremium);
 	return true;
 }
@@ -134,6 +146,7 @@ void USeasonProgressSubsystem::SetPremium(bool bInHasPremium)
 		return;
 	}
 	bHasPremium = bInHasPremium;
+	SaveProgress();
 	OnProgressChanged.Broadcast();
 }
 
@@ -144,7 +157,42 @@ void USeasonProgressSubsystem::ResetProgress()
 	ClaimedFree.Reset();
 	ClaimedPremium.Reset();
 	UnlockedSkills.Reset();
+	SaveProgress();
 	OnProgressChanged.Broadcast();
+}
+
+void USeasonProgressSubsystem::WriteTo(USeasonSaveGame& Save) const
+{
+	Save.TotalXP = TotalXP;
+	Save.bHasPremium = bHasPremium;
+	Save.ClaimedFree = ClaimedFree;
+	Save.ClaimedPremium = ClaimedPremium;
+	Save.UnlockedSkills = UnlockedSkills;
+}
+
+void USeasonProgressSubsystem::ReadFrom(const USeasonSaveGame& Save)
+{
+	TotalXP = FMath::Max(0, Save.TotalXP);
+	bHasPremium = Save.bHasPremium;
+	ClaimedFree = Save.ClaimedFree;
+	ClaimedPremium = Save.ClaimedPremium;
+	UnlockedSkills = Save.UnlockedSkills;
+	OnProgressChanged.Broadcast();
+}
+
+void USeasonProgressSubsystem::SaveProgress() const
+{
+	if (!bPersistenceEnabled)
+	{
+		return;
+	}
+
+	USeasonSaveGame* Save = Cast<USeasonSaveGame>(UGameplayStatics::CreateSaveGameObject(USeasonSaveGame::StaticClass()));
+	WriteTo(*Save);
+	if (!UGameplayStatics::SaveGameToSlot(Save, SaveSlotName, 0))
+	{
+		UE_LOG(LogSeasonPass, Warning, TEXT("Failed to save season progress to slot %s."), SaveSlotName);
+	}
 }
 
 int32 USeasonProgressSubsystem::GetMaxLevel() const

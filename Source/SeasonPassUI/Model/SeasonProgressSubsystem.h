@@ -6,6 +6,7 @@
 #include "SeasonProgressSubsystem.generated.h"
 
 class UDataTable;
+class USeasonSaveGame;
 
 DECLARE_MULTICAST_DELEGATE(FOnSeasonProgressChanged);
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnSeasonLevelUp, int32 /*NewLevel*/);
@@ -74,12 +75,25 @@ public:
 	/** Replaces the tier data and resets progress. Lets tests run without the DataTable asset. */
 	void SetTierRowsForTest(TArray<FSeasonTierRow> Rows);
 
+	/** Copies progress into / out of a save object. Pure state transfer, no disk I/O, so it is testable. */
+	void WriteTo(USeasonSaveGame& Save) const;
+	void ReadFrom(const USeasonSaveGame& Save);
+
+	/** Save slot used at runtime. */
+	static const TCHAR* SaveSlotName;
+
 	FOnSeasonProgressChanged OnProgressChanged;
 	FOnSeasonLevelUp OnLevelUp;
 	FOnSeasonTierClaimed OnTierClaimed;
 
 private:
 	void SetTierRows(TArray<FSeasonTierRow> Rows);
+
+	/** Writes progress to the save slot. No-op unless persistence was enabled in Initialize. */
+	void SaveProgress() const;
+
+	/** Only the runtime subsystem persists; objects created directly (e.g. in tests) never touch disk. */
+	bool bPersistenceEnabled = false;
 
 	UPROPERTY(Transient)
 	TObjectPtr<UDataTable> TierTable;
