@@ -2,6 +2,8 @@
 
 ![Season pass demo](Docs/demo.gif)
 
+▶ **[Watch the full demo (33 s)](https://youtu.be/3PfdAP9c0ww)**
+
 A Fortnite-style season progression screen built in **Unreal Engine 5.8**. It has 20 reward tiers with free and premium tracks, an XP bar that fills smoothly, claimable rewards, an animated level-up toast, and skill nodes that unlock as you claim tiers.
 
 The point of the project is the **architecture**. All rules live in C++. Widgets bind to a ViewModel through UMG Viewmodel (MVVM) and contain no game logic.
