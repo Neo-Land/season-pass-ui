@@ -35,15 +35,15 @@ protected:
 	virtual void NativeDestruct() override;
 
 	/** Horizontal ListView whose entry class is WBP_TierTile. */
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(BlueprintReadOnly, Category = "Widgets", meta = (BindWidget))
 	TObjectPtr<UListView> TierList;
 
 	/** Optional ListView whose entry class is WBP_SkillChip. */
-	UPROPERTY(meta = (BindWidgetOptional))
+	UPROPERTY(BlueprintReadOnly, Category = "Widgets", meta = (BindWidgetOptional))
 	TObjectPtr<UListView> SkillList;
 
 	/** Optional. If present, C++ drives its Percent with easing, so don't bind Percent in View Bindings. */
-	UPROPERTY(meta = (BindWidgetOptional))
+	UPROPERTY(BlueprintReadOnly, Category = "Widgets", meta = (BindWidgetOptional))
 	TObjectPtr<UProgressBar> XPBar;
 
 	/** Optional scale + fade animation for the toast. The toast hides when it ends (or after 2 s without one). */
@@ -51,34 +51,34 @@ protected:
 	TObjectPtr<UWidgetAnimation> LevelUpAnim;
 
 	// Optional parts that only receive styling.
-	UPROPERTY(meta = (BindWidgetOptional))
+	UPROPERTY(BlueprintReadOnly, Category = "Widgets", meta = (BindWidgetOptional))
 	TObjectPtr<UImage> Background;
 
-	UPROPERTY(meta = (BindWidgetOptional))
+	UPROPERTY(BlueprintReadOnly, Category = "Widgets", meta = (BindWidgetOptional))
 	TObjectPtr<UTextBlock> Title;
 
-	UPROPERTY(meta = (BindWidgetOptional))
+	UPROPERTY(BlueprintReadOnly, Category = "Widgets", meta = (BindWidgetOptional))
 	TObjectPtr<UTextBlock> LevelText;
 
-	UPROPERTY(meta = (BindWidgetOptional))
+	UPROPERTY(BlueprintReadOnly, Category = "Widgets", meta = (BindWidgetOptional))
 	TObjectPtr<UTextBlock> XPText;
 
-	UPROPERTY(meta = (BindWidgetOptional))
+	UPROPERTY(BlueprintReadOnly, Category = "Widgets", meta = (BindWidgetOptional))
 	TObjectPtr<UButton> Add100;
 
-	UPROPERTY(meta = (BindWidgetOptional))
+	UPROPERTY(BlueprintReadOnly, Category = "Widgets", meta = (BindWidgetOptional))
 	TObjectPtr<UButton> Add1000;
 
-	UPROPERTY(meta = (BindWidgetOptional))
+	UPROPERTY(BlueprintReadOnly, Category = "Widgets", meta = (BindWidgetOptional))
 	TObjectPtr<UButton> PremiumButton;
 
-	UPROPERTY(meta = (BindWidgetOptional))
+	UPROPERTY(BlueprintReadOnly, Category = "Widgets", meta = (BindWidgetOptional))
 	TObjectPtr<UButton> ResetButton;
 
-	UPROPERTY(meta = (BindWidgetOptional))
+	UPROPERTY(BlueprintReadOnly, Category = "Widgets", meta = (BindWidgetOptional))
 	TObjectPtr<UBorder> LevelUpToast;
 
-	UPROPERTY(meta = (BindWidgetOptional))
+	UPROPERTY(BlueprintReadOnly, Category = "Widgets", meta = (BindWidgetOptional))
 	TObjectPtr<UTextBlock> LevelUpTextBlock;
 
 	/** How fast the XP bar catches up to its target. Higher is snappier. */

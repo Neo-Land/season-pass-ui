@@ -16,12 +16,12 @@ class SEASONPASSUI_API USkillChipWidget : public USeasonListEntryWidget
 protected:
 	virtual void NativePreConstruct() override;
 
-	UPROPERTY(meta = (BindWidgetOptional))
+	UPROPERTY(BlueprintReadOnly, Category = "Widgets", meta = (BindWidgetOptional))
 	TObjectPtr<UBorder> Chip;
 
-	UPROPERTY(meta = (BindWidgetOptional))
+	UPROPERTY(BlueprintReadOnly, Category = "Widgets", meta = (BindWidgetOptional))
 	TObjectPtr<UBorder> LockedShade;
 
-	UPROPERTY(meta = (BindWidgetOptional))
+	UPROPERTY(BlueprintReadOnly, Category = "Widgets", meta = (BindWidgetOptional))
 	TObjectPtr<UTextBlock> NodeName;
 };

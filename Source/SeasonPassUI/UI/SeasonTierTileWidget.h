@@ -28,37 +28,37 @@ public:
 protected:
 	virtual void NativePreConstruct() override;
 
-	UPROPERTY(meta = (BindWidgetOptional))
+	UPROPERTY(BlueprintReadOnly, Category = "Widgets", meta = (BindWidgetOptional))
 	TObjectPtr<UBorder> RarityBorder;
 
-	UPROPERTY(meta = (BindWidgetOptional))
+	UPROPERTY(BlueprintReadOnly, Category = "Widgets", meta = (BindWidgetOptional))
 	TObjectPtr<UTextBlock> TierNumber;
 
-	UPROPERTY(meta = (BindWidgetOptional))
+	UPROPERTY(BlueprintReadOnly, Category = "Widgets", meta = (BindWidgetOptional))
 	TObjectPtr<UTextBlock> CurrentLabel;
 
-	UPROPERTY(meta = (BindWidgetOptional))
+	UPROPERTY(BlueprintReadOnly, Category = "Widgets", meta = (BindWidgetOptional))
 	TObjectPtr<UTextBlock> FreeReward;
 
-	UPROPERTY(meta = (BindWidgetOptional))
+	UPROPERTY(BlueprintReadOnly, Category = "Widgets", meta = (BindWidgetOptional))
 	TObjectPtr<UTextBlock> PremiumReward;
 
-	UPROPERTY(meta = (BindWidgetOptional))
+	UPROPERTY(BlueprintReadOnly, Category = "Widgets", meta = (BindWidgetOptional))
 	TObjectPtr<UTextBlock> FreeLock;
 
-	UPROPERTY(meta = (BindWidgetOptional))
+	UPROPERTY(BlueprintReadOnly, Category = "Widgets", meta = (BindWidgetOptional))
 	TObjectPtr<UTextBlock> FreeCheck;
 
-	UPROPERTY(meta = (BindWidgetOptional))
+	UPROPERTY(BlueprintReadOnly, Category = "Widgets", meta = (BindWidgetOptional))
 	TObjectPtr<UTextBlock> PremiumLock;
 
-	UPROPERTY(meta = (BindWidgetOptional))
+	UPROPERTY(BlueprintReadOnly, Category = "Widgets", meta = (BindWidgetOptional))
 	TObjectPtr<UTextBlock> PremiumCheck;
 
-	UPROPERTY(meta = (BindWidgetOptional))
+	UPROPERTY(BlueprintReadOnly, Category = "Widgets", meta = (BindWidgetOptional))
 	TObjectPtr<UButton> ClaimFreeButton;
 
-	UPROPERTY(meta = (BindWidgetOptional))
+	UPROPERTY(BlueprintReadOnly, Category = "Widgets", meta = (BindWidgetOptional))
 	TObjectPtr<UButton> ClaimPremiumButton;
 
 private:
