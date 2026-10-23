@@ -28,6 +28,17 @@ public:
 	void ClaimPremium();
 
 	int32 GetTierIndex() const { return TierIndex; }
+	const FText& GetTierLabel() const { return TierLabel; }
+	ETierState GetFreeState() const { return FreeState; }
+	ETierState GetPremiumState() const { return PremiumState; }
+	bool IsCurrentTier() const { return bIsCurrentTier; }
+	bool IsFreeLocked() const { return bFreeLocked; }
+	bool IsFreeClaimable() const { return bFreeClaimable; }
+	bool IsFreeClaimed() const { return bFreeClaimed; }
+	bool IsPremiumLocked() const { return bPremiumLocked; }
+	bool IsPremiumClaimable() const { return bPremiumClaimable; }
+	bool IsPremiumClaimed() const { return bPremiumClaimed; }
+	FLinearColor GetDisplayColor() const { return RarityColor; }
 
 	static FLinearColor GetRarityColor(ESeasonRarity InRarity);
 

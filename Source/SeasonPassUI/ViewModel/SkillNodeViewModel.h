@@ -15,6 +15,8 @@ public:
 	void SetUnlocked(bool bInUnlocked);
 
 	FName GetNodeId() const { return NodeId; }
+	const FText& GetDisplayName() const { return DisplayName; }
+	bool IsUnlocked() const { return bUnlocked; }
 
 private:
 	UPROPERTY(BlueprintReadOnly, FieldNotify, Category = "Skill", meta = (AllowPrivateAccess = "true"))

@@ -49,7 +49,13 @@ public:
 
 	const TArray<TObjectPtr<USeasonTierViewModel>>& GetTiers() const { return Tiers; }
 	const TArray<TObjectPtr<USkillNodeViewModel>>& GetSkillNodes() const { return SkillNodes; }
+	int32 GetCurrentLevel() const { return CurrentLevel; }
+	const FText& GetLevelLabel() const { return LevelLabel; }
 	float GetXPProgress() const { return XPProgress; }
+	const FText& GetXPLabel() const { return XPLabel; }
+	bool HasPremium() const { return bHasPremium; }
+	const FText& GetPremiumLabel() const { return PremiumLabel; }
+	const FText& GetLevelUpText() const { return LevelUpText; }
 	bool ShouldShowLevelUp() const { return bShowLevelUp; }
 
 private:

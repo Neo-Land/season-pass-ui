@@ -1,6 +1,8 @@
 #include "Misc/AutomationTest.h"
 #include "Engine/GameInstance.h"
 #include "Model/SeasonProgressSubsystem.h"
+#include "Model/SeasonSaveGame.h"
+#include "Tests/SeasonTestData.h"
 #include "UObject/StrongObjectPtr.h"
 
 #if WITH_DEV_AUTOMATION_TESTS
@@ -12,8 +14,6 @@ BEGIN_DEFINE_SPEC(FSeasonProgressSpec, "SeasonPass.Progress",
 	TStrongObjectPtr<UGameInstance> GameInstance;
 	TStrongObjectPtr<USeasonProgressSubsystem> Progress;
 
-	static TArray<FSeasonTierRow> MakeTestTiers();
-
 	/** Compares tier states by name so failures read "Claimed" instead of "2". */
 	void TestState(const FString& What, ETierState Actual, ETierState Expected)
 	{
@@ -22,29 +22,13 @@ BEGIN_DEFINE_SPEC(FSeasonProgressSpec, "SeasonPass.Progress",
 
 END_DEFINE_SPEC(FSeasonProgressSpec)
 
-/** Five tiers, 500 XP apart. Tier 3 unlocks "Cooking II". */
-TArray<FSeasonTierRow> FSeasonProgressSpec::MakeTestTiers()
-{
-	TArray<FSeasonTierRow> Rows;
-	for (int32 Tier = 1; Tier <= 5; ++Tier)
-	{
-		FSeasonTierRow& Row = Rows.AddDefaulted_GetRef();
-		Row.TierIndex = Tier;
-		Row.XPRequired = (Tier - 1) * 500;
-		Row.FreeRewardName = FText::FromString(FString::Printf(TEXT("Free %d"), Tier));
-		Row.PremiumRewardName = FText::FromString(FString::Printf(TEXT("Premium %d"), Tier));
-	}
-	Rows[2].UnlocksSkillNode = TEXT("Cooking II");
-	return Rows;
-}
-
 void FSeasonProgressSpec::Define()
 {
 	BeforeEach([this]()
 	{
 		GameInstance.Reset(NewObject<UGameInstance>());
 		Progress.Reset(NewObject<USeasonProgressSubsystem>(GameInstance.Get()));
-		Progress->SetTierRowsForTest(MakeTestTiers());
+		Progress->SetTierRowsForTest(SeasonTest::MakeTiers());
 	});
 
 	AfterEach([this]()
@@ -168,6 +152,45 @@ void FSeasonProgressSpec::Define()
 			TestFalse("Premium", Progress->HasPremium());
 			TestState("Tier 1 claimable again", Progress->GetTierState(1, false), ETierState::Claimable);
 			TestFalse("Skill", Progress->IsSkillUnlocked(TEXT("Cooking II")));
+		});
+	});
+
+	Describe("Save data", [this]()
+	{
+		It("round-trips XP, premium, claims and skills", [this]()
+		{
+			Progress->AddXP(1200);
+			Progress->SetPremium(true);
+			Progress->ClaimTier(1, false);
+			Progress->ClaimTier(3, true);
+
+			USeasonSaveGame* Save = NewObject<USeasonSaveGame>();
+			Progress->WriteTo(*Save);
+
+			USeasonProgressSubsystem* Restored = NewObject<USeasonProgressSubsystem>(GameInstance.Get());
+			Restored->SetTierRowsForTest(SeasonTest::MakeTiers());
+			Restored->ReadFrom(*Save);
+
+			TestEqual("TotalXP", Restored->GetTotalXP(), 1200);
+			TestEqual("Level", Restored->GetCurrentLevel(), 3);
+			TestTrue("Premium", Restored->HasPremium());
+			TestState("Tier 1 free", Restored->GetTierState(1, false), ETierState::Claimed);
+			TestState("Tier 3 premium", Restored->GetTierState(3, true), ETierState::Claimed);
+			TestState("Tier 3 free still claimable", Restored->GetTierState(3, false), ETierState::Claimable);
+			TestTrue("Skill", Restored->IsSkillUnlocked(TEXT("Cooking II")));
+		});
+
+		It("notifies listeners when progress is loaded", [this]()
+		{
+			int32 Broadcasts = 0;
+			Progress->OnProgressChanged.AddLambda([&]() { ++Broadcasts; });
+
+			USeasonSaveGame* Save = NewObject<USeasonSaveGame>();
+			Save->TotalXP = 600;
+			Progress->ReadFrom(*Save);
+
+			TestEqual("Broadcasts", Broadcasts, 1);
+			TestEqual("Level", Progress->GetCurrentLevel(), 2);
 		});
 	});
 }
